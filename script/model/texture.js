@@ -73,7 +73,6 @@ class Texture {
             this.setSkybox(1, "pixel", ".jpg"),
             this.setSkybox(2, "real", ".jpg")
         ];
-
     }
 
     setSkybox(id, name, filetype) {
@@ -89,7 +88,8 @@ class Texture {
     setColors() {
         return {
             default: "#16142e",
-            ground: "#eae0c8"
+            ground: "#eae0c8",
+            player: "#83a9fe"
         }
     }
 

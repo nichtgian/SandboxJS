@@ -9,7 +9,6 @@ class Sprite {
     getSpriteImage(texture, type) {
         for (let i = 0; i < texture.sprites.length; i++) {
             let sprite = texture.sprites[i];
-
             if (sprite.name === type) {
                 return sprite.image;
             }

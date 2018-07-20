@@ -1,5 +1,22 @@
-let canvas = document.getElementById("display");
-let ctx = canvas.getContext("2d");
-ctx.imageSmoothingEnabled = false;
+let player = null;
+let lastRender = 0;
 
-let player = new Player(225, 225, 40);
+function start() {
+    player = new Player(100, 100, 45, texture);
+    window.requestAnimationFrame(loop);
+}
+
+function update() {
+}
+
+function render() {
+    player.render();
+}
+
+function loop(timestamp) {
+    update();
+    render();
+
+    lastRender = timestamp;
+    window.requestAnimationFrame(loop);
+}

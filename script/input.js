@@ -16,5 +16,4 @@ function lockChangeLog() {
 function mousemoveCallback(event) {
     let turn = event.movementX / 2;
     player.turn(turn);
-    player.render();
 }

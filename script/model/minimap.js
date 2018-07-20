@@ -1,21 +1,24 @@
 class Minimap {
-    constructor(map, texture, width) {
-        this.map = map;
+    constructor(map, width, texture) {
         this.texture = texture;
+        this.map = map;
         this.width = width;
         this.surface = width / (map.width * map.size) * map.size;
         this.height = this.surface * map.height;
     }
 
     render() {
+        ctx.globalAlpha = 0.9;
         this.renderWalls();
         this.renderPlayer();
+        this.renderSprites();
+        ctx.globalAlpha = 1;
     }
 
     renderWalls() {
-        ctx.fillStyle = this.texture.colors.ground;
+        ctx.fillStyle = texture.colors.ground;
         ctx.fillRect(0, 0, this.width, this.height);
-        ctx.fillStyle = this.texture.colors.default;
+        ctx.fillStyle = texture.colors.default;
 
         for (let y = 0; y < this.map.height; y++) {
             for (let x = 0; x < this.map.width; x++) {
@@ -37,27 +40,42 @@ class Minimap {
         ctx.beginPath();
 
         /*player front side*/
-        ctx.moveTo(player.x / this.map.size * this.surface + size * Math.cos(player.pod * Math.PI / 180), player.y / this.map.size * this.surface + size * Math.sin(player.pod * Math.PI / 180));
+        ctx.moveTo(
+            player.x / this.map.size * this.surface + size * Math.cos(player.pod * Math.PI / 180),
+            player.y / this.map.size * this.surface + size * Math.sin(player.pod * Math.PI / 180)
+        );
 
         /*player back left side*/
-        ctx.lineTo(player.x / this.map.size * this.surface + size * Math.cos((player.pod - 140)* Math.PI / 180), player.y / this.map.size * this.surface + size * Math.sin((player.pod - 140) * Math.PI / 180));
+        ctx.lineTo(
+            player.x / this.map.size * this.surface + size * Math.cos((player.pod - 140)* Math.PI / 180),
+            player.y / this.map.size * this.surface + size * Math.sin((player.pod - 140) * Math.PI / 180)
+        );
 
         /*player back right side*/
-        ctx.lineTo(player.x / this.map.size * this.surface + size * Math.cos((player.pod - 220)* Math.PI / 180), player.y / this.map.size * this.surface + size * Math.sin((player.pod - 220) * Math.PI / 180));
+        ctx.lineTo(
+            player.x / this.map.size * this.surface + size * Math.cos((player.pod - 220)* Math.PI / 180),
+            player.y / this.map.size * this.surface + size * Math.sin((player.pod - 220) * Math.PI / 180)
+        );
 
         /*back to player front side*/
-        ctx.lineTo(player.x / this.map.size * this.surface + size * Math.cos(player.pod * Math.PI / 180), player.y / this.map.size * this.surface + size * Math.sin(player.pod * Math.PI / 180));
+        ctx.lineTo(
+            player.x / this.map.size * this.surface + size * Math.cos(player.pod * Math.PI / 180),
+            player.y / this.map.size * this.surface + size * Math.sin(player.pod * Math.PI / 180)
+        );
 
-        /*draw player triangle*/
         ctx.fill();
         ctx.stroke();
     }
 
+    renderSprites() {
+        for (let i = 0; i < this.map.sprites.length; i++) {
+            this.renderSprite(this.map.sprites[i]);
+        }
+    }
+
     renderSprite(sprite) {
-        /*draw sprite as circle*/
-        ctx.fillStyle = "#000";
         ctx.beginPath();
-        ctx.arc(sprite.x / environment.block * this.blockSurface, sprite.y / environment.block * this.blockSurface, this.blockSurface / 10, 0, 2 * Math.PI, false);
+        ctx.arc(sprite.x / this.map.size * this.surface, sprite.y / this.map.size * this.surface, this.surface / 10, 0, 2 * Math.PI, false);
         ctx.fill();
     }
 }

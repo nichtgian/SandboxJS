@@ -22,14 +22,18 @@ class Texture {
 
     setWalls() {
         return [
-            this.setWall(1, "stone",       ".jpg"),
-            this.setWall(2, "wood",        ".jpg"),
-            this.setWall(3, "brick",       ".jpg"),
-            this.setWall(4, "cobble",      ".png"),
-            this.setWall(5, "colorstone",  ".png"),
+            this.setWall(1, "stone", ".jpg"),
+            this.setWall(2, "wood", ".jpg"),
+            this.setWall(3, "brick", ".jpg"),
+            this.setWall(4, "cobble", ".png"),
+            this.setWall(5, "colorstone", ".png"),
             this.setWall(6, "purplestone", ".png"),
-            this.setWall(7, "bluestone",   ".png"),
-            this.setWall(8, "mossy",       ".png")
+            this.setWall(7, "bluestone", ".png"),
+            this.setWall(8, "mossy", ".png"),
+            this.setWall(9, "castle", ".jpg"),
+            this.setWall(10, "plaster", ".jpg"),
+            this.setWall(11, "whitestone", ".jpg"),
+            this.setWall(12, "banner", ".png")
         ];
     }
 
@@ -49,7 +53,7 @@ class Texture {
             this.setSprite(2, "armor"),
             this.setSprite(3, "light"),
             this.setSprite(4, "plant"),
-            this.setSprite(5, "plant"),
+            this.setSprite(5, "barrel"),
             this.setSprite(6, "pillar")
         ];
     }
@@ -66,7 +70,8 @@ class Texture {
 
     setSkyboxes() {
         return [
-            this.setSkybox(1, "sky", ".jpg"),
+            this.setSkybox(1, "pixel", ".jpg"),
+            this.setSkybox(2, "real", ".jpg")
         ];
 
     }
@@ -102,7 +107,7 @@ class Texture {
         this.loadingCounter++;
         if (this.loadingCounter >= this.loadingLength) {
             console.log(this.loadingLength + " textures loaded!");
-            player.render();
+            start();
         }
     }
 }

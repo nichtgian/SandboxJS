@@ -1,16 +1,17 @@
 class Player {
-    constructor(x, y, pod) {
+    constructor(x, y, pod, texture) {
+        this.texture = texture;
         this.x = x;
         this.y = y;
         this.pod = pod;
-        this.speed = 1;
+        this.speed = 5;
         this.resolution = 1;
         this.fov = 90 * Math.PI / 180;
         this.size = 15;
 
-        this.texture = new Texture();
-        this.map = new Map();
-        this.minimap = new Minimap(this.map, this.texture, 220);
+        this.zIndex = [];
+        this.map = new Map(texture);
+        this.minimap = new Minimap(this.map, 220, texture);
     }
 
     turn(speed) {
@@ -24,8 +25,8 @@ class Player {
     }
 
     move(direction) {
-        let deviation = this.size / 2;
-        let block = this.map.size;
+        const deviation = this.size / 2;
+        const block = this.map.size;
 
         this.x += Math.cos((this.pod + direction) * Math.PI / 180) * this.speed;
         this.y += Math.sin((this.pod + direction) * Math.PI / 180) * this.speed;
@@ -41,17 +42,19 @@ class Player {
 
     render() {
         ctx.clearRect(0, 0, canvas.width, canvas.height);
-        this.minimap.render();
+
+        this.renderSkybox();
         this.renderWalls();
+        this.renderSprites();
         this.minimap.render();
-        this.fizzlefade();
+        this.renderUI();
     }
 
     renderWalls() {
         ctx.fillStyle = this.texture.colors.default;
 
+        this.zIndex = [];
         let resolution = Math.ceil(canvas.width / this.resolution);
-        let id = 0;
 
         for (let x = 0; x < resolution; x++) {
             let viewDist = (canvas.width / this.resolution) / Math.tan((this.fov / 2));
@@ -72,11 +75,16 @@ class Player {
             angle += PI2;
         }
 
-        let right = angle > PI2 * 0.75 || angle < PI2 * 0.25;
-        let up = angle < 0 || angle > Math.PI;
+        const right = angle > PI2 * 0.75 || angle < PI2 * 0.25;
+        const up = angle < 0 || angle > Math.PI;
 
-        let sin = Math.sin(angle);
-        let cos = Math.cos(angle);
+        const sin = Math.sin(angle);
+        const cos = Math.cos(angle);
+
+        const px = this.x / 50;
+        const py = this.y / 50;
+
+        let hor = false;
 
         let dist = 0;
         let textureX;
@@ -86,9 +94,6 @@ class Player {
         let dXVer = right ? 1 : -1;
         let dYVer = dXVer * slope;
 
-        let px = this.x / 50;
-        let py = this.y / 50;
-
         let x = right ? Math.ceil(px) : Math.floor(px);
         let y = py + (x - px) * slope;
 
@@ -97,13 +102,14 @@ class Player {
             let wallY = Math.floor(y);
 
             if (this.map.grid[wallY][wallX] > 0) {
+                hor = true;
                 dist = Math.sqrt(Math.pow(x - px, 2) + Math.pow(y - py, 2));
                 texture = this.map.grid[wallY][wallX];
                 textureX = (y * 50) % 50;
 
-                /*if (!right) {
+                if (!right) {
                     textureX = 50 - textureX;
-                }*/
+                }
                 break;
             }
             x += dXVer;
@@ -125,20 +131,24 @@ class Player {
             if (this.map.grid[wallY][wallX] > 0) {
                 let distHor = Math.sqrt(Math.pow(x - px, 2) + Math.pow(y - py, 2));
 
-                if (distHor < dist) {
+                if (dist === 0 || distHor < dist) {
+                    hor = false;
                     dist = distHor;
                     texture = this.map.grid[wallY][wallX];
                     textureX = (x * 50) % 50;
 
-                    /*if (up) {
+                    if (!up) {
                         textureX = 50 - textureX;
-                    }*/
+                    }
                 }
                 break;
             }
             x += dXHor;
             y += dYHor;
         }
+
+        dist *= Math.cos(this.pod * Math.PI / 180 - angle);
+        this.zIndex.push(dist);
 
         return {
             distance: dist,
@@ -149,32 +159,85 @@ class Player {
 
     drawWall(x, wall) {
         let dist = 1200 / wall.distance;
-        let texture = this.texture.walls[wall.texture -1];
-        if (texture != undefined) {
-            texture = texture.image;
-        }
-        let textureX = wall.textureX;
+        let texture = this.texture.walls[wall.texture -1].image;
+        let textureX = Math.floor(texture.width / 50 * wall.textureX);
 
         ctx.fillRect(x, canvas.height / 2 - dist / 2, 1, dist);
-        ctx.drawImage(texture, texture.width / 50 * textureX, 0, texture.width / 50, texture.height, x, canvas.height / 2 - dist / 2, 1, dist);
+        ctx.drawImage(texture, textureX, 0, texture.width / 50, texture.height, x, canvas.height / 2 - dist / 2, 1, Math.floor(dist));
     }
 
-    isWall(x, y) {
-        x = Math.floor(x / this.map.size);
-        y = Math.floor(y / this.map.size);
-        return this.map.grid[x] === undefined ||
-            this.map.grid[x][y] === undefined ||
-            this.map.grid[x][y] !== 0;
-    }
+    renderSprites() {
+        let sprites = [];
 
-    getWallTexture(x, y) {
-        x = Math.floor(x / this.map.size);
-        y = Math.floor(y / this.map.size);
-        if (this.map.grid[x] !== undefined ||
-            this.map.grid[x][y] !== undefined ||
-            this.map.grid[x][y] !== 0) {
-            return this.texture.walls[this.map.grid[x][y] - 1].image;
+        for (let i = 0; i < this.map.sprites.length; i++) {
+            sprites[i] = {
+                distance: Math.sqrt(Math.pow(this.map.sprites[i].x - this.x, 2) + Math.pow(this.map.sprites[i].y - this.y, 2)),
+                sprite: this.map.sprites[i]
+            };
         }
+
+        sprites.sort(function(a, b) {
+            if (a.distance < b.distance) {
+                return 1;
+            }
+            if (a.distance > b.distance) {
+                return -1;
+            }
+            return 0;
+        });
+
+        for (let i = 0; i < this.map.sprites.length; i++) {
+            this.renderSprite(sprites[i].sprite);
+        }
+    }
+
+    renderSprite(sprite) {
+        let dx = (sprite.x - this.x) / 50;
+        let dy = (sprite.y - this.y) / 50;
+
+        let angle = Math.atan2(dy, dx) - this.pod * Math.PI / 180;
+        if (angle < -Math.PI) {
+            angle += 2 * Math.PI;
+        }
+        if (angle >= Math.PI) {
+            angle -= 2 * Math.PI;
+        }
+
+        if (angle > -Math.PI * 0.5 && angle < Math.PI * 0.5) {
+            let distance = Math.sqrt(Math.pow(dx, 2) + Math.pow(dy, 2));
+            let viewDist = (canvas.width / this.resolution) / Math.tan((this.fov / 2));
+            let size = 1200 / (Math.cos(angle) * distance);
+            let x = Math.tan(angle) * viewDist;
+            let left = canvas.width / 2 + x - size / 2;
+
+            this.drawSprite(sprite.image, distance, left, size);
+        }
+    }
+
+    drawSprite(image, distance, left, size) {
+        for (let i = 0; i < image.width; i++) {
+            let pixel = size / image.width;
+            let x = left + (pixel * i);
+
+            if (this.zIndex[Math.round(x)] < distance) {
+                continue;
+            }
+            ctx.drawImage(image, i, 0, 1, image.height, x, (canvas.height - size) / 2, pixel, size);
+        }
+    }
+
+    renderSkybox() {
+        ctx.drawImage(texture.skyboxes[0].image, 1920 / 360 * player.pod, 0, 1920 / 4, 1080, 0, 0, canvas.width, canvas.height / 1.5);
+        ctx.drawImage(texture.skyboxes[0].image, 1920 / 360 * (player.pod - 360), 0, 1920 / 4, 1080, 0, 0, canvas.width, canvas.height / 1.5);
+
+        ctx.fillStyle = texture.colors.ground;
+        ctx.fillRect(0, canvas.height / 2, canvas.width, canvas.height / 2);
+    }
+
+    renderUI() {
+        ctx.beginPath();
+        ctx.arc(canvas.width / 2, canvas.height / 2, 2.5, 0, 2 * Math.PI, false);
+        ctx.fill();
     }
 
     async fizzlefade() {

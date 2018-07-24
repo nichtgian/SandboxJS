@@ -4,10 +4,13 @@ class Player {
         this.x = x;
         this.y = y;
         this.pod = pod;
-        this.speed = 5;
         this.resolution = 1;
         this.fov = 90 * Math.PI / 180;
         this.size = 15;
+
+        this.speed = 0;
+        this.turnSpeed = 0;
+        this.moveDirection = 0;
 
         this.zIndex = [];
         this.map = new Map(texture);
@@ -24,19 +27,26 @@ class Player {
         player.pod += speed;
     }
 
-    move(direction) {
+    move() {
+        this.turn(this.turnSpeed);
+
+        if (this.speed === 0) {
+            return;
+        }
+
         const deviation = this.size / 2;
         const block = this.map.size;
 
-        this.x += Math.cos((this.pod + direction) * Math.PI / 180) * this.speed;
-        this.y += Math.sin((this.pod + direction) * Math.PI / 180) * this.speed;
+        let newx = this.x + Math.cos((this.pod + this.moveDirection) * Math.PI / 180) * this.speed;
+        let newy = this.y + Math.sin((this.pod + this.moveDirection) * Math.PI / 180) * this.speed;
 
-        if (this.map.grid[Math.floor((this.y + deviation) / block)][Math.floor((this.x + deviation) / block)] !== 0 ||
-            this.map.grid[Math.floor((this.y - deviation) / block)][Math.floor((this.x - deviation) / block)] !== 0 ||
-            this.map.grid[Math.floor((this.y + deviation) / block)][Math.floor((this.x - deviation) / block)] !== 0 ||
-            this.map.grid[Math.floor((this.y - deviation) / block)][Math.floor((this.x + deviation) / block)] !== 0 ||
-            this.map.grid[Math.floor(this.y / block)][Math.floor(this.x / block)] !== 0) {
-            this.move(direction + 180);
+        if (!(this.map.grid[Math.floor((newy+ deviation) / block)][Math.floor((newx + deviation) / block)] !== 0 ||
+            this.map.grid[Math.floor((newy - deviation) / block)][Math.floor((newx - deviation) / block)] !== 0 ||
+            this.map.grid[Math.floor((newy + deviation) / block)][Math.floor((newx - deviation) / block)] !== 0 ||
+            this.map.grid[Math.floor((newy - deviation) / block)][Math.floor((newx + deviation) / block)] !== 0 ||
+            this.map.grid[Math.floor(newy / block)][Math.floor(newx / block)] !== 0)) {
+            this.x = newx;
+            this.y = newy;
         }
     }
 
@@ -51,7 +61,7 @@ class Player {
     }
 
     renderWalls() {
-        ctx.fillStyle = this.texture.colors.default;
+        ctx.fillStyle = this.texture.colors.shadow;
 
         this.zIndex = [];
         let resolution = Math.ceil(canvas.width / this.resolution);
@@ -84,7 +94,7 @@ class Player {
         const px = this.x / 50;
         const py = this.y / 50;
 
-        let hor = false;
+        let shadow = false;
 
         let dist = 0;
         let textureX;
@@ -102,13 +112,13 @@ class Player {
             let wallY = Math.floor(y);
 
             if (this.map.grid[wallY][wallX] > 0) {
-                hor = true;
                 dist = Math.sqrt(Math.pow(x - px, 2) + Math.pow(y - py, 2));
                 texture = this.map.grid[wallY][wallX];
                 textureX = (y * 50) % 50;
 
                 if (!right) {
                     textureX = 50 - textureX;
+                    shadow = true;
                 }
                 break;
             }
@@ -132,12 +142,13 @@ class Player {
                 let distHor = Math.sqrt(Math.pow(x - px, 2) + Math.pow(y - py, 2));
 
                 if (dist === 0 || distHor < dist) {
-                    hor = false;
+                    shadow = true;
                     dist = distHor;
                     texture = this.map.grid[wallY][wallX];
                     textureX = (x * 50) % 50;
 
                     if (!up) {
+                        shadow = false;
                         textureX = 50 - textureX;
                     }
                 }
@@ -153,17 +164,23 @@ class Player {
         return {
             distance: dist,
             texture: texture,
-            textureX: textureX
+            textureX: textureX,
+            shadow: shadow
         };
     }
 
     drawWall(x, wall) {
-        let dist = 1200 / wall.distance;
+        let size = 1200 / wall.distance;
         let texture = this.texture.walls[wall.texture -1].image;
         let textureX = Math.floor(texture.width / 50 * wall.textureX);
 
-        ctx.fillRect(x, canvas.height / 2 - dist / 2, 1, dist);
-        ctx.drawImage(texture, textureX, 0, texture.width / 50, texture.height, x, canvas.height / 2 - dist / 2, 1, Math.floor(dist));
+        ctx.drawImage(texture, textureX, 0, 1, texture.height, x, canvas.height / 2 - size / 2, 1, size);
+
+        if (wall.shadow) {
+            ctx.globalAlpha = 0.4;
+            ctx.fillRect(x, canvas.height / 2 - size / 2, 1, size);
+            ctx.globalAlpha = 1;
+        }
     }
 
     renderSprites() {
@@ -215,20 +232,28 @@ class Player {
     }
 
     drawSprite(image, distance, left, size) {
-        for (let i = 0; i < image.width; i++) {
-            let pixel = size / image.width;
-            let x = left + (pixel * i);
-
-            if (this.zIndex[Math.round(x)] < distance) {
+        //ctx.drawImage(image, left, (canvas.height - size) / 2, size, size);
+        for (let i = left; i < left + size; i++) {
+            if (this.zIndex[Math.round(i)] <= distance) {
                 continue;
             }
-            ctx.drawImage(image, i, 0, 1, image.height, x, (canvas.height - size) / 2, pixel, size);
+
+            ctx.drawImage(image, image.width / size * (i - left), 0, 1, image.height, i, (canvas.height - size) / 2, 1, size);
         }
     }
 
     renderSkybox() {
-        ctx.drawImage(texture.skyboxes[0].image, 1920 / 360 * player.pod, 0, 1920 / 4, 1080, 0, 0, canvas.width, canvas.height / 1.5);
-        ctx.drawImage(texture.skyboxes[0].image, 1920 / 360 * (player.pod - 360), 0, 1920 / 4, 1080, 0, 0, canvas.width, canvas.height / 1.5);
+        let image = texture.skyboxes[2].image;
+        ctx.drawImage(
+            image,
+            image.width / 360 * this.pod, 0, image.width / 4, image.height,
+            0, 0, canvas.width, canvas.height / 2
+        );
+        ctx.drawImage(
+            image,
+            image.width / 360 * (this.pod - 360), 0, image.width / 4, image.height,
+            0, 0, canvas.width, canvas.height / 2
+        );
 
         ctx.fillStyle = texture.colors.ground;
         ctx.fillRect(0, canvas.height / 2, canvas.width, canvas.height / 2);

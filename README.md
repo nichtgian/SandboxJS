@@ -1,6 +1,6 @@
 # Sandbox
 The sandbox is a raycasting engine in 2nd generation.
-You can play the current Version [here](https://nichtgian.github.io/ray/).
+You can play the current Version [here](https://nichtgian.github.io/sandbox/).
 
 ## Ambition
 Sanbox is a in JavaScript and HTML Canvas developped raycast engine.

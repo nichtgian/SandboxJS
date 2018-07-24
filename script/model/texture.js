@@ -49,12 +49,27 @@ class Texture {
 
     setSprites() {
         return [
-            this.setSprite(1, "table"),
+            this.setSprite(1, "ammo"),
             this.setSprite(2, "armor"),
-            this.setSprite(3, "light"),
-            this.setSprite(4, "plant"),
-            this.setSprite(5, "barrel"),
-            this.setSprite(6, "pillar")
+            this.setSprite(3, "barrel"),
+            this.setSprite(4, "bones"),
+            this.setSprite(5, "cage"),
+            this.setSprite(6, "chandalier"),
+            this.setSprite(7, "decayed"),
+            this.setSprite(8, "dogfood"),
+            this.setSprite(9, "food"),
+            this.setSprite(10, "fountain"),
+            this.setSprite(11, "fuel"),
+            this.setSprite(12, "lamp"),
+            this.setSprite(13, "light"),
+            this.setSprite(14, "pillar"),
+            this.setSprite(15, "plant"),
+            this.setSprite(16, "pole"),
+            this.setSprite(17, "pot"),
+            this.setSprite(18, "puddle"),
+            this.setSprite(19, "table"),
+            this.setSprite(20, "toxic"),
+            this.setSprite(21, "vase")
         ];
     }
 
@@ -71,7 +86,8 @@ class Texture {
     setSkyboxes() {
         return [
             this.setSkybox(1, "pixel", ".jpg"),
-            this.setSkybox(2, "real", ".jpg")
+            this.setSkybox(2, "real", ".jpg"),
+            this.setSkybox(3, "heaven", ".png")
         ];
     }
 
@@ -88,8 +104,9 @@ class Texture {
     setColors() {
         return {
             default: "#16142e",
-            ground: "#eae0c8",
-            player: "#83a9fe"
+            ground: "rgb(200,200,200)",
+            player: "#83a9fe",
+            shadow: "#020304"
         }
     }
 
@@ -106,8 +123,11 @@ class Texture {
     imageLoaded() {
         this.loadingCounter++;
         if (this.loadingCounter >= this.loadingLength) {
-            console.log(this.loadingLength + " textures loaded!");
-            start();
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            ctx.fillText(this.loadingLength + " textures loaded!", canvas.width / 2 - 50, canvas.height / 2 - 20);
+            setTimeout(() => {
+                start();
+            }, 250);
         }
     }
 }

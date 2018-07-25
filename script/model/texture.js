@@ -106,7 +106,8 @@ class Texture {
             default: "#16142e",
             ground: "rgb(200,200,200)",
             player: "#83a9fe",
-            shadow: "#020304"
+            shadow: "#020304",
+            enemy: "#ff2233"
         }
     }
 

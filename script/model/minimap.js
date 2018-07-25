@@ -12,6 +12,7 @@ class Minimap {
         this.renderWalls();
         this.renderPlayer();
         this.renderSprites();
+        this.renderEnemys();
         ctx.globalAlpha = 1;
     }
 
@@ -71,6 +72,23 @@ class Minimap {
         ctx.arc(
             sprite.x / this.map.size * this.surface,
             sprite.y / this.map.size * this.surface,
+            this.surface / 10, 0, 2 * Math.PI, false
+        );
+        ctx.fill();
+    }
+
+    renderEnemys() {
+        ctx.fillStyle = this.texture.colors.enemy;
+        for (let i = 0; i < this.map.enemys.length; i++) {
+            this.renderEnemy(this.map.enemys[i]);
+        }
+    }
+
+    renderEnemy(enemy) {
+        ctx.beginPath();
+        ctx.arc(
+            enemy.x / this.map.size * this.surface,
+            enemy.y / this.map.size * this.surface,
             this.surface / 10, 0, 2 * Math.PI, false
         );
         ctx.fill();

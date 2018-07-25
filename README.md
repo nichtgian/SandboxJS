@@ -1,6 +1,8 @@
-# Sandbox
+# Sandbox [![HitCount](http://hits.dwyl.io/Nichtgian/sandbox.svg)](http://hits.dwyl.io/Nichtgian/sandbox)
 The sandbox is a raycasting engine in 2nd generation.
 You can play the current Version [here](https://nichtgian.github.io/sandbox/).
+
+fps count -> stats.js - http://github.com/mrdoob/stats.js
 
 ## Ambition
 Sanbox is a in JavaScript and HTML Canvas developped raycast engine.

@@ -14,7 +14,7 @@ class Player {
 
         this.zIndex = [];
         this.map = new Map(texture);
-        this.minimap = new Minimap(this.map, 220, texture);
+        this.minimap = new Minimap(this.map, 250, texture);
     }
 
     turn(speed) {
@@ -52,10 +52,10 @@ class Player {
 
     render() {
         ctx.clearRect(0, 0, canvas.width, canvas.height);
-
         this.renderSkybox();
         this.renderWalls();
         this.renderSprites();
+        this.renderEnemys();
         this.minimap.render();
         this.renderUI();
     }
@@ -79,8 +79,8 @@ class Player {
 
     castWall(angle) {
         const PI2 = Math.PI * 2;
-
         angle %= PI2;
+
         if (angle < 0) {
             angle += PI2;
         }
@@ -211,8 +211,8 @@ class Player {
     renderSprite(sprite) {
         let dx = (sprite.x - this.x) / 50;
         let dy = (sprite.y - this.y) / 50;
-
         let angle = Math.atan2(dy, dx) - this.pod * Math.PI / 180;
+
         if (angle < -Math.PI) {
             angle += 2 * Math.PI;
         }
@@ -232,7 +232,6 @@ class Player {
     }
 
     drawSprite(image, distance, left, size) {
-        //ctx.drawImage(image, left, (canvas.height - size) / 2, size, size);
         for (let i = left; i < left + size; i++) {
             if (this.zIndex[Math.round(i)] <= distance) {
                 continue;
@@ -242,24 +241,28 @@ class Player {
         }
     }
 
+    renderEnemys() {
+
+    }
+
     renderSkybox() {
         let image = texture.skyboxes[2].image;
         ctx.drawImage(
             image,
-            image.width / 360 * this.pod, 0, image.width / 4, image.height,
+            image.width * (1600 / image.width) * this.pod, 0, image.width / 4, image.height,
             0, 0, canvas.width, canvas.height / 2
         );
-        ctx.drawImage(
+        /*ctx.drawImage(
             image,
-            image.width / 360 * (this.pod - 360), 0, image.width / 4, image.height,
+            image.width / 90 * (this.pod + 90), 0, image.width / 4, image.height,
             0, 0, canvas.width, canvas.height / 2
-        );
-
+        );*/
         ctx.fillStyle = texture.colors.ground;
         ctx.fillRect(0, canvas.height / 2, canvas.width, canvas.height / 2);
     }
 
     renderUI() {
+        ctx.fillStyle = this.texture.colors.default;
         ctx.beginPath();
         ctx.arc(canvas.width / 2, canvas.height / 2, 2.5, 0, 2 * Math.PI, false);
         ctx.fill();

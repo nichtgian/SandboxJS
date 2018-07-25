@@ -1,9 +1,15 @@
 let player = null;
-let cycleTime = 0;
+let cycleTime = Date.now();
+
+let stats = new Stats();
+stats.showPanel(0);
+stats.dom.style.marginTop = "10px";
+stats.dom.style.marginLeft = "260px";
+document.body.appendChild(stats.dom);
 
 function start() {
-    player = new Player(75, 75, 90, texture);
-    window.requestAnimationFrame(cycle);
+    player = new Player(425, 325, 0, texture);
+    cycle();
 }
 
 function update() {
@@ -14,37 +20,17 @@ function render() {
     player.render();
 }
 
-function cycle(timestamp) {
+function cycle() {
+    stats.begin();
+
     update();
     render();
 
-    cycleTime = timestamp;
-    window.requestAnimationFrame(cycle);
-}
-
-/*
-function update(time) {
-    player.move(time / fpsDelay);
-}
-
-function render() {
-    player.render();
-}
-
-function cycle() {
     let now = Date.now();
-    let time = now - cycleTime;
-
-    update(time);
-    render();
-
-    let cycleDelay = fpsDelay;
-    if (time > cycleDelay) {
-        cycleDelay = Math.max(1, cycleDelay - (time - cycleDelay));
-    }
-
-    ctx.fillText(time, canvas.width - 50, canvas.height - 30);
-
+    let dt = (now - cycleTime) / (1000 / 30);
+    //console.log((now - cycleTime), dt);
     cycleTime = now;
-    setTimeout(cycle, cycleDelay);
-}*/
+
+    stats.end();
+    setTimeout(cycle, dt);
+}

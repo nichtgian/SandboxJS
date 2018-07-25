@@ -1,5 +1,5 @@
 document.onkeydown = (event) => {
-    let speed = 4;
+    let speed = 2;
     let turn = 2;
 
     switch (event.keyCode) {

@@ -10,17 +10,17 @@ Future gamemodes can be limitless. The main focus relays on a smooth game experi
 versatile gamemodes. 
 
 ## Current State
-Rendering of Walls & Sprites. The resolution aswell as the FPS are high.
+Rendering of Walls, Sprites and Enemies. The resolution aswell as the FPS are high.
 Most of the problems of the earlier engines are fixed.
 
-![Screenshot 1](assets/screenshot1.JPG)
+![Screenshot 1](assets/screenshot1.png)
 
-![Screenshot 2](assets/screenshot2.JPG)
+![Screenshot 2](assets/screenshot2.png)
 
 ## Next Steps
 Implementing new features: 
 
-- Touch Support / Improved Controlls
+- Touch Support / Improved Controls
 - In depth Rendering including possible Floors, Variable Height Walls, Doors / Windows, Y- Axis View
 - Guns & Bullet holes in walls, Graffiti
 - Sprite Animations, Grenades

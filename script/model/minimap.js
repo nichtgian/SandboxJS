@@ -37,23 +37,23 @@ class Minimap {
 
         ctx.beginPath();
         ctx.moveTo(
-            player.x / this.map.size * this.surface + size * Math.cos(player.pod * Math.PI / 180),
-            player.y / this.map.size * this.surface + size * Math.sin(player.pod * Math.PI / 180)
+            player.x / this.map.size * this.surface + size * Math.cos(player.pod * (Math.PI / 180)),
+            player.y / this.map.size * this.surface + size * Math.sin(player.pod * (Math.PI / 180))
         );
 
         ctx.lineTo(
-            player.x / this.map.size * this.surface + size * Math.cos((player.pod - 140)* Math.PI / 180),
-            player.y / this.map.size * this.surface + size * Math.sin((player.pod - 140) * Math.PI / 180)
+            player.x / this.map.size * this.surface + size * Math.cos((player.pod - 140) * (Math.PI / 180)),
+            player.y / this.map.size * this.surface + size * Math.sin((player.pod - 140) * (Math.PI / 180))
         );
 
         ctx.lineTo(
-            player.x / this.map.size * this.surface + size * Math.cos((player.pod - 220)* Math.PI / 180),
-            player.y / this.map.size * this.surface + size * Math.sin((player.pod - 220) * Math.PI / 180)
+            player.x / this.map.size * this.surface + size * Math.cos((player.pod - 220) * (Math.PI / 180)),
+            player.y / this.map.size * this.surface + size * Math.sin((player.pod - 220) * (Math.PI / 180))
         );
 
         ctx.lineTo(
-            player.x / this.map.size * this.surface + size * Math.cos(player.pod * Math.PI / 180),
-            player.y / this.map.size * this.surface + size * Math.sin(player.pod * Math.PI / 180)
+            player.x / this.map.size * this.surface + size * Math.cos(player.pod * (Math.PI / 180)),
+            player.y / this.map.size * this.surface + size * Math.sin(player.pod * (Math.PI / 180))
         );
 
         ctx.fill();

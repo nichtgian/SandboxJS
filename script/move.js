@@ -1,31 +1,32 @@
 document.onkeydown = (event) => {
-    let speed = 2;
+    let forwardSpeed = 1;
+    let backSpeed = 0.75;
     let turn = 2;
 
     switch (event.keyCode) {
         /*w, arrow up*/
         case 87:
         case 38:
-            player.speed = speed;
+            player.speed = forwardSpeed;
             player.moveDirection = 0;
             break;
 
         /*s, arrow down*/
         case 83:
         case 40:
-            player.speed = 3;
+            player.speed = backSpeed;
             player.moveDirection = 180;
             break;
 
         /*a*/
         case 68:
-            player.speed = speed;
+            player.speed = backSpeed;
             player.moveDirection = 90;
             break;
 
         /*d*/
         case 65:
-            player.speed = speed;
+            player.speed = backSpeed;
             player.moveDirection = 270;
             break;
 

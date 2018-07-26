@@ -5,7 +5,7 @@ class Player {
         this.y = y;
         this.pod = pod;
         this.resolution = 1;
-        this.fov = 90 * Math.PI / 180;
+        this.fov = 90 * (Math.PI / 180);
         this.size = 15;
 
         this.speed = 0;
@@ -27,18 +27,19 @@ class Player {
         player.pod += speed;
     }
 
-    move() {
+    move(dt) {
         this.turn(this.turnSpeed);
 
         if (this.speed === 0) {
             return;
         }
 
+        const speed = this.speed * dt / 10;
         const deviation = this.size / 2;
         const block = this.map.size;
 
-        let newx = this.x + Math.cos((this.pod + this.moveDirection) * Math.PI / 180) * this.speed;
-        let newy = this.y + Math.sin((this.pod + this.moveDirection) * Math.PI / 180) * this.speed;
+        let newx = this.x + Math.cos((this.pod + this.moveDirection) * (Math.PI / 180)) * speed;
+        let newy = this.y + Math.sin((this.pod + this.moveDirection) * (Math.PI / 180)) * speed;
 
         if (!(this.map.grid[Math.floor((newy+ deviation) / block)][Math.floor((newx + deviation) / block)] !== 0 ||
             this.map.grid[Math.floor((newy - deviation) / block)][Math.floor((newx - deviation) / block)] !== 0 ||
@@ -51,7 +52,7 @@ class Player {
     }
 
     update(dt) {
-        this.move();
+        this.move(dt);
     }
 
     render() {
@@ -59,6 +60,7 @@ class Player {
 
         this.renderSkybox();
         this.renderWalls();
+        this.renderEnemys();
         this.renderSprites();
         this.minimap.render();
         this.renderUI();
@@ -76,7 +78,7 @@ class Player {
             let rayDist = Math.sqrt(rayx * rayx + viewDist * viewDist);
             let rayAngle = Math.asin(rayx / rayDist);
 
-            let wall = this.castWall(this.pod * Math.PI / 180 + rayAngle);
+            let wall = this.castWall(this.pod * (Math.PI / 180) + rayAngle);
             this.renderWall(x, wall);
         }
     }
@@ -163,7 +165,7 @@ class Player {
         }
 
         this.zIndex.push(dist);
-        dist *= Math.cos(this.pod * Math.PI / 180 - angle);
+        dist *= Math.cos(this.pod * (Math.PI / 180) - angle);
 
         return {
             distance: dist,
@@ -190,6 +192,13 @@ class Player {
         }
     }
 
+    renderEnemys() {
+        for (let i = 0; i < this.map.enemys.length; i++) {
+            let enemy = this.map.enemys[i];
+            enemy.getStateView(this.x, this.y, this.pod);
+        }
+    }
+
     renderSprites() {
         let sprites = [];
 
@@ -197,7 +206,7 @@ class Player {
             let sprite = this.map.sprites[i];
             let dx = (sprite.x - this.x) / 50;
             let dy = (sprite.y - this.y) / 50;
-            let angle = Math.atan2(dy, dx) - this.pod * Math.PI / 180;
+            let angle = Math.atan2(dy, dx) - this.pod * (Math.PI / 180);
 
             if (angle < -Math.PI) {
                 angle += 2 * Math.PI;
@@ -217,6 +226,34 @@ class Player {
                     viewDist: viewDist,
                     size: size,
                     image: sprite.image,
+                });
+            }
+        }
+
+        for (let i = 0; i < this.map.enemys.length; i++) {
+            let enemy = this.map.enemys[i];
+            let dx = (enemy.x - this.x) / 50;
+            let dy = (enemy.y - this.y) / 50;
+            let angle = Math.atan2(dy, dx) - this.pod * (Math.PI / 180);
+
+            if (angle < -Math.PI) {
+                angle += 2 * Math.PI;
+            }
+            if (angle >= Math.PI) {
+                angle -= 2 * Math.PI;
+            }
+
+            if (angle > -Math.PI * 0.5 && angle < Math.PI * 0.5) {
+                let distance = Math.sqrt(Math.pow(dx, 2) + Math.pow(dy, 2));
+                let viewDist = (canvas.width / this.resolution) / Math.tan((this.fov / 2));
+                let size = 1200 / (Math.cos(angle) * distance);
+
+                sprites.push({
+                    distance: distance,
+                    angle: angle,
+                    viewDist: viewDist,
+                    size: size,
+                    image: enemy.image,
                 });
             }
         }
@@ -243,6 +280,10 @@ class Player {
     renderSprite(image, distance, left, size) {
         /*show all*/
         //ctx.drawImage(image, left, (canvas.height - size) / 2, size, size);
+
+        if (image === null) {
+            return;
+        }
 
         let resolution = 2;
         for (let i = 0; i < image.width * resolution; i++) {

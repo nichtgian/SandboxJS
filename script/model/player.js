@@ -7,9 +7,11 @@ class Player {
         this.resolution = 1;
         this.fov = 90 * (Math.PI / 180);
         this.size = 15;
+        this.look = 0;
 
         this.speed = 0;
         this.turnSpeed = 0;
+        this.lookSpeed = 0;
         this.moveDirection = 0;
 
         this.zIndex = [];
@@ -17,18 +19,26 @@ class Player {
         this.minimap = new Minimap(this.map, 250, texture);
     }
 
-    turn(speed) {
+    turn(turn, look) {
+        this.look += look;
+        if (this.look > 1000) {
+            this.look = 1000;
+        }
+        if (this.look < -1000) {
+            this.look = -1000;
+        }
+
+        this.pod += turn;
         if (this.pod >= 360) {
             this.pod -= 360;
         }
         if (this.pod < 0) {
             this.pod += 360;
         }
-        player.pod += speed;
     }
 
     move(dt) {
-        this.turn(this.turnSpeed);
+        this.turn(this.turnSpeed, this.lookSpeed);
 
         if (this.speed === 0) {
             return;
@@ -182,12 +192,12 @@ class Player {
 
         ctx.drawImage(
             texture, textureX, 0, 1, texture.height,
-            x, canvas.height / 2 - size / 2, 1, size
+            x, canvas.height / 2 - size / 2 + this.look, 1, size
         );
 
         if (wall.shadow) {
             ctx.globalAlpha = 0.4;
-            ctx.fillRect(x, canvas.height / 2 - size / 2, 1, size);
+            ctx.fillRect(x, canvas.height / 2 - size / 2 + this.look, 1, size);
             ctx.globalAlpha = 1;
         }
     }
@@ -278,9 +288,6 @@ class Player {
     }
 
     renderSprite(image, distance, left, size) {
-        /*show all*/
-        //ctx.drawImage(image, left, (canvas.height - size) / 2, size, size);
-
         if (image === null) {
             return;
         }
@@ -297,10 +304,14 @@ class Player {
             ctx.drawImage(
                 image,
                 i / resolution, 0, 1 / resolution, image.height,
-                left + x / resolution, (canvas.height - size) / 2, pixel, size
+                left + x / resolution, (canvas.height - size) / 2 + this.look, pixel, size
             );
         }
 
+        /*show all*/
+        /*
+        ctx.drawImage(image, left, (canvas.height - size) / 2, size, size);
+         */
         /*bad performance, most accurate*/
         /*
         for (let i = left; i < left + size; i++) {
@@ -322,15 +333,15 @@ class Player {
         ctx.drawImage(
             image,
             image.width / (6 * 60) * this.pod, 0, image.width / 6, image.height,
-            0, 0, canvas.width, canvas.height / 2
+            0, -image.height * 2 + this.look, canvas.width, image.height * 3.5
         );
         ctx.drawImage(
             image,
             image.width / (6 * 60) * (this.pod - 360), 0, image.width / 6, image.height,
-            0, 0, canvas.width, canvas.height / 2
+            0, -image.height * 2 + this.look, canvas.width, image.height * 3.5
         );
         ctx.fillStyle = texture.colors.ground;
-        ctx.fillRect(0, canvas.height / 2, canvas.width, canvas.height / 2);
+        ctx.fillRect(0, canvas.height / 2 + this.look, canvas.width, canvas.height / 2 - this.look);
     }
 
     renderUI() {

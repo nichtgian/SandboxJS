@@ -69,7 +69,10 @@ class Texture {
             this.setSprite(18, "puddle"),
             this.setSprite(19, "table"),
             this.setSprite(20, "toxic"),
-            this.setSprite(21, "vase")
+            this.setSprite(21, "vase"),
+            this.setSprite(22, "medic"),
+            this.setSprite(23, "bag"),
+            this.setSprite(24, "grenades")
         ];
     }
 

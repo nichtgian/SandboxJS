@@ -14,5 +14,7 @@ function lockChangeLog() {
 }
 
 function mousemoveCallback(event) {
-    player.turn(event.movementX / 2);
+    let sensitivityX = 1;
+    let sensitivityY = 4;
+    player.turn(event.movementX / sensitivityX, (-event.movementY) * sensitivityY);
 }

@@ -15,6 +15,8 @@ class Player {
         this.moveDirection = 0;
 
         this.zIndex = [];
+        this.podDistance = 0;
+        this.joystick = new Joystick();
         this.map = new Map(texture);
         this.minimap = new Minimap(this.map, 250, texture);
     }
@@ -72,8 +74,10 @@ class Player {
         this.renderWalls();
         this.renderEnemys();
         this.renderSprites();
-        this.minimap.render();
         this.renderUI();
+
+        this.minimap.render();
+        //this.joystick.render();
     }
 
     renderWalls() {
@@ -89,6 +93,9 @@ class Player {
             let rayAngle = Math.asin(rayx / rayDist);
 
             let wall = this.castWall(this.pod * (Math.PI / 180) + rayAngle);
+            if (x === resolution / 2) {
+                this.podDistance = wall.distance;
+            }
             this.renderWall(x, wall);
         }
     }
@@ -174,8 +181,8 @@ class Player {
             y += dYHor;
         }
 
-        this.zIndex.push(dist);
         dist *= Math.cos(this.pod * (Math.PI / 180) - angle);
+        this.zIndex.push(dist);
 
         return {
             distance: dist,

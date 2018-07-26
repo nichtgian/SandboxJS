@@ -13,6 +13,10 @@ versatile gamemodes.
 Rendering of Walls & Sprites. The resolution aswell as the FPS are high.
 Most of the problems of the earlier engines are fixed.
 
+![Screenshot 1](assets/screenshot1.JPG)
+
+![Screenshot 2](assets/screenshot2.JPG)
+
 ## Next Steps
 Implementing new features: 
 

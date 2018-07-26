@@ -3,8 +3,6 @@ let cycleTime = Date.now();
 
 let stats = new Stats();
 stats.showPanel(0);
-stats.dom.style.marginTop = "10px";
-stats.dom.style.marginLeft = "260px";
 document.body.appendChild(stats.dom);
 
 function start() {

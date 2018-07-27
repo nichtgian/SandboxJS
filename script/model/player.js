@@ -16,7 +16,7 @@ class Player {
 
         this.zIndex = [];
         this.podDistance = 0;
-        this.joystick = new Joystick();
+        this.joystick = null;
         this.map = new Map(texture);
         this.minimap = new Minimap(this.map, 250, texture);
     }
@@ -53,7 +53,7 @@ class Player {
         let newx = this.x + Math.cos((this.pod + this.moveDirection) * (Math.PI / 180)) * speed;
         let newy = this.y + Math.sin((this.pod + this.moveDirection) * (Math.PI / 180)) * speed;
 
-        if (!(this.map.grid[Math.floor((newy+ deviation) / block)][Math.floor((newx + deviation) / block)] !== 0 ||
+        if (!(this.map.grid[Math.floor((newy + deviation) / block)][Math.floor((newx + deviation) / block)] !== 0 ||
             this.map.grid[Math.floor((newy - deviation) / block)][Math.floor((newx - deviation) / block)] !== 0 ||
             this.map.grid[Math.floor((newy + deviation) / block)][Math.floor((newx - deviation) / block)] !== 0 ||
             this.map.grid[Math.floor((newy - deviation) / block)][Math.floor((newx + deviation) / block)] !== 0 ||
@@ -74,10 +74,13 @@ class Player {
         this.renderWalls();
         this.renderEnemys();
         this.renderSprites();
-        this.renderUI();
 
+        this.renderUI();
         this.minimap.render();
-        //this.joystick.render();
+
+        if (this.joystick !== null) {
+            this.joystick.render();
+        }
     }
 
     renderWalls() {

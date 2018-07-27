@@ -8,6 +8,7 @@ document.body.appendChild(stats.dom);
 function start() {
     player = new Player(375, 325, 0, texture);
     window.requestAnimationFrame(cycle);
+    checktouch();
 }
 
 function update(dt) {

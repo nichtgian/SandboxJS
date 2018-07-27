@@ -1,13 +1,12 @@
 function checktouch() {
     if ('ontouchstart' in document.documentElement) {
         player.joystick = new Joystick();
-        document.getElementById("display").addEventListener("touchstart", touchstart, false);
-        document.getElementById("display").addEventListener("touchmove", touchmove, false);
-        document.getElementById("display").addEventListener("touchend", touchend, false);
+        document.addEventListener("touchstart", touchstart, false);
+        document.addEventListener("touchmove", touchmove, false);
+        document.addEventListener("touchend", touchend, false);
     }
     else {
         document.addEventListener('pointerlockchange', lockChangeLog, false);
-
         canvas.onclick = function() {
             canvas.requestPointerLock();
         };
@@ -34,8 +33,8 @@ function mousemoveCallback(event) {
 /*mobile*/
 function touchstart(event) {
     let joystick = player.joystick;
-    let x = event.touches[0].pageX;
-    let y = event.touches[0].pageY;
+    let x = event.touches[0].pageX / canvas.clientWidth * canvas.width;
+    let y = event.touches[0].pageY / window.innerHeight * canvas.height;
     joystick.active = true;
     joystick.x = x;
     joystick.y = y;
@@ -45,8 +44,8 @@ function touchstart(event) {
 
 function touchmove() {
     player.joystick.moveStick(
-        event.touches[0].pageX,
-        event.touches[0].pageY
+        event.touches[0].pageX / canvas.clientWidth * canvas.width,
+        event.touches[0].pageY / window.innerHeight * canvas.height
     );
 }
 

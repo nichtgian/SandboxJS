@@ -9,7 +9,7 @@ html, body {
 #display {
     margin: auto;
     width: 100%;
-    height: auto;
+    height: 100%;
     position: absolute;
     top: 50%;
     transform: translateY(-50%);

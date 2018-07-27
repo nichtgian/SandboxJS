@@ -72,7 +72,18 @@ class Texture {
             this.setSprite(21, "vase"),
             this.setSprite(22, "medic"),
             this.setSprite(23, "bag"),
-            this.setSprite(24, "grenades")
+            this.setSprite(24, "grenades"),
+            this.setSprite(25, "stonepillar"),
+            this.setSprite(26, "tablechairs"),
+            this.setSprite(27, "armor2"),
+            this.setSprite(28, "bones2"),
+            this.setSprite(29, "cage2"),
+            this.setSprite(30, "cage3"),
+            this.setSprite(31, "light2"),
+            this.setSprite(32, "oven"),
+            this.setSprite(33, "pole2"),
+            this.setSprite(34, "sink"),
+            this.setSprite(35, "table2")
         ];
     }
 

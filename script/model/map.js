@@ -31,12 +31,12 @@ class Map {
             new Sprite(125, 95, "fuel", texture),
 
             new Sprite(175, 275, "plant", texture),
-            new Sprite(125, 275, "table", texture),
+            new Sprite(125, 275, "tablechairs", texture),
             new Sprite(225, 275, "table", texture),
             new Sprite(275, 425, "table", texture),
 
             new Sprite(225, 75, "pole", texture),
-            new Sprite(325, 75, "pole", texture),
+            new Sprite(325, 75, "armor2", texture),
             new Sprite(275, 75, "armor", texture),
 
             new Sprite(415, 70, "barrel", texture),
@@ -46,27 +46,35 @@ class Map {
             new Sprite(415, 120, "fuel", texture),
 
             new Sprite(125, 525, "pillar", texture),
-            new Sprite(75, 475, "pillar", texture),
+            new Sprite(75, 475, "stonepillar", texture),
             new Sprite(225, 725, "barrel", texture),
 
             new Sprite(125, 625, "fountain", texture),
             new Sprite(115, 655, "puddle", texture),
-            new Sprite(135, 675, "puddle", texture),
+            new Sprite(135, 675, "sink", texture),
+            new Sprite(75, 725, "stonepillar", texture),
 
             new Sprite(415, 735, "toxic", texture),
             new Sprite(440, 735, "toxic", texture),
+            new Sprite(465, 735, "barrel", texture),
+            new Sprite(525, 575, "oven", texture),
+            new Sprite(525, 735, "oven", texture),
             new Sprite(475, 575, "toxic", texture),
             new Sprite(505, 575, "bones", texture),
             new Sprite(535, 675, "bones", texture),
+            new Sprite(420, 625, "bones2", texture),
+            new Sprite(420, 575, "pole2", texture),
+            new Sprite(535, 615, "bones2", texture),
+
             new Sprite(425, 475, "vase", texture),
             new Sprite(450, 475, "vase", texture),
             new Sprite(475, 475, "decayed", texture),
         ];
 
         this.enemys = [
-            new Soldier(495, 425, 270),
+            new Grenadier(495, 425, 270),
             new Soldier(725, 525, 0),
-            new Soldier(625, 625, 270)
+            new Grenadier(625, 625, 270)
         ];
     }
 }

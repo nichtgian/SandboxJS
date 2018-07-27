@@ -181,8 +181,8 @@ class Player {
             y += dYHor;
         }
 
-        dist *= Math.cos(this.pod * (Math.PI / 180) - angle);
         this.zIndex.push(dist);
+        dist *= Math.cos(this.pod * (Math.PI / 180) - angle);
 
         return {
             distance: dist,

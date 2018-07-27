@@ -2,11 +2,11 @@
 The sandbox is a raycasting engine in 2nd generation.
 You can play the current Version [here](https://nichtgian.github.io/sandbox/).
 
-fps count -> stats.js - http://github.com/mrdoob/stats.js
+FPS/Performance display: [stats.js](http://github.com/mrdoob/stats.js).
 
 ## Ambition
-Sanbox is a in JavaScript and HTML Canvas developped raycast engine.
-Future gamemodes can be limitless. The main focus relays on a smooth game experiance,
+Sandbox is a in JavaScript and HTML Canvas developed raycast engine.
+Future gamemodes can be limitless. The main focus relays on a smooth game experience,
 versatile gamemodes. 
 
 ## Current State
@@ -35,3 +35,5 @@ For online gameplay a main lobby serves as serverbrowser. You can meet up with p
 public or create private servers. We'd like to implement a character or even weapon customisation. 
 
 > Project is still in early development!
+
+Licensed by NMFI - [Nichtgian Media Foundation Inc.](https://nichtgianmediafoundationincorporation.github.io/page/index.html) - high-end computer-software, better than google

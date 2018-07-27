@@ -3,7 +3,7 @@ class Joystick {
         this.direction = 0;
         this.turnSpeed = 0;
 
-        this.radius = 100;
+        this.radius = 170;
         this.active = false;
 
         this.x = 0;
@@ -20,7 +20,7 @@ class Joystick {
 
     renderTurn() {
         let width = 10;
-        let size = 35;
+        let size = 60;
 
         /*inner*/
         ctx.beginPath();
@@ -51,10 +51,15 @@ class Joystick {
             this.stickX = x;
             this.stickY = y;
         }
+        else {
+            let angle = Math.atan2(x - this.x, y - this.y);
+            this.stickX = this.x + this.radius * Math.sin(angle);
+            this.stickY = this.y + this.radius * Math.cos(angle);
+        }
 
         player.moveDirection = 0;
         let backSpeed = 0.75;
-        let speedY = (this.y - this.stickY) / 100;
+        let speedY = (this.y - this.stickY) / 150;
         if (speedY < 0) {
             speedY = (speedY * backSpeed) * -1;
             player.moveDirection = 180;

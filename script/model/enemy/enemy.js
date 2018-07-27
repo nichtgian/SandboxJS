@@ -8,6 +8,8 @@ class Enemy {
         this.x = x;
         this.y = y;
         this.direction = direction;
+        this.speed = 0.2;
+        this.animationtime = 0;
         this.health = health;
         this.states = [];
         this.state = null;
@@ -64,5 +66,34 @@ class Enemy {
         }
 
         this.image = this.state.views[0].image;
+    }
+
+    move() {
+        let newx = this.x + Math.cos(this.direction * (Math.PI / 180)) * this.speed;
+        let newy = this.y + Math.sin(this.direction * (Math.PI / 180)) * this.speed;
+        let deviation = 10;
+        let block = player.map.size;
+
+        if (!(player.map.grid[Math.floor((newy + deviation) / block)][Math.floor((newx + deviation) / block)] !== 0 ||
+                player.map.grid[Math.floor((newy - deviation) / block)][Math.floor((newx - deviation) / block)] !== 0 ||
+                player.map.grid[Math.floor((newy + deviation) / block)][Math.floor((newx - deviation) / block)] !== 0 ||
+                player.map.grid[Math.floor((newy - deviation) / block)][Math.floor((newx + deviation) / block)] !== 0 ||
+                player.map.grid[Math.floor(newy / block)][Math.floor(newx / block)] !== 0)) {
+            this.x = newx;
+            this.y = newy;
+        }
+        else {
+            this.turn(180);
+        }
+    }
+
+    turn(deg) {
+        this.direction += deg;
+        if (this.direction > 360) {
+            this.direction -= 360;
+        }
+        if (this.direction < 0) {
+            this.direction += 360;
+        }
     }
 }

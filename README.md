@@ -2,14 +2,23 @@
 The sandbox is a raycasting engine in 2nd generation.
 You can play the current Version [here](https://nichtgian.github.io/sandbox/).
 
-FPS/Performance display: [stats.js](http://github.com/mrdoob/stats.js).
+[<img src="assets/play.png">](https://nichtgian.github.io/sandbox/)
 
-## Ambition
+## 0 Content
+* 1 Ambition
+* 2 Current State 
+  * 2.1 Rendering
+  * 2.2 Controls
+  * 2.3 Others
+* 3 In Development
+
+
+## 1 Ambition
 Sandbox is a in JavaScript and HTML Canvas developed raycast engine.
 Future gamemodes can be limitless. The main focus relays on a smooth game experience,
 versatile gamemodes. 
 
-## Current State
+## 2 Current State
 Rendering of Walls, Sprites and Enemies. The resolution aswell as the FPS are high.
 Most of the problems of the earlier engines are fixed.
 
@@ -17,13 +26,28 @@ Most of the problems of the earlier engines are fixed.
 
 ![Screenshot 2](assets/screenshot2.png)
 
-## Next Steps
+### 2.1 Rendering
+- Minimap
+- Textured Walls
+- Sprites
+- Enemys from 8 Views
+- Skybox
+
+### 2.2 Controls
+- Detect touch devices
+- Touch joystick for moving for- and backwards and turn left or right
+- Desktop mouse catching for turning x- and y axis, walking WASD
+
+### 2.3 Others 
+- FPS/Performance display: [stats.js](http://github.com/mrdoob/stats.js).
+
+## 3 In Development
 Implementing new features: 
 
-- Touch Support / Improved Controls
-- In depth Rendering including possible Floors, Variable Height Walls, Doors / Windows, Y- Axis View
+- Improving Mobile Performance
+- In depth Rendering including Floors, Variable Height Walls, Doors / Windows
 - Guns & Bullet holes in walls, Graffiti
-- Sprite Animations, Grenades
+- Sprite Animadtions, Grenades
 
 Possible Gamemodes:
 

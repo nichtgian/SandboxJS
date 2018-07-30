@@ -65,8 +65,8 @@ class Player {
 
     update(dt) {
         this.move(dt);
-        this.map.enemys[0].walk();
-        this.map.enemys[2].walk();
+        this.map.enemys[0].walk(dt);
+        this.map.enemys[2].walk(dt);
     }
 
     render() {

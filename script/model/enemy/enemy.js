@@ -8,7 +8,7 @@ class Enemy {
         this.x = x;
         this.y = y;
         this.direction = direction;
-        this.speed = 0.2;
+        this.speed = 0.25;
         this.animationtime = 0;
         this.health = health;
         this.states = [];
@@ -43,8 +43,13 @@ class Enemy {
         let px = ppx + Math.cos(pod * (Math.PI / 180));
         let py = ppy + Math.sin(pod * (Math.PI / 180));
 
-        let angle = Math.atan2(y - py, x - px) * (180 / Math.PI);
-        angle += this.direction;
+        let dx = x - px;
+        let dy = y - py;
+
+        let angle = Math.atan2(dy, dx) * (180 / Math.PI);
+        angle -= this.direction;
+        angle += 180;
+
         if (angle < 0) {
             angle += 360;
         }
@@ -68,11 +73,15 @@ class Enemy {
         this.image = this.state.views[0].image;
     }
 
-    move() {
-        let newx = this.x + Math.cos(this.direction * (Math.PI / 180)) * this.speed;
-        let newy = this.y + Math.sin(this.direction * (Math.PI / 180)) * this.speed;
-        let deviation = 10;
-        let block = player.map.size;
+    move(dt) {
+        let speed = this.speed;
+        if (dt > 0) {
+            speed = speed * dt / 10;
+        }
+        const newx = this.x + Math.cos(this.direction * (Math.PI / 180)) * speed;
+        const newy = this.y + Math.sin(this.direction * (Math.PI / 180)) * speed;
+        const deviation = 10;
+        const block = player.map.size;
 
         if (!(player.map.grid[Math.floor((newy + deviation) / block)][Math.floor((newx + deviation) / block)] !== 0 ||
                 player.map.grid[Math.floor((newy - deviation) / block)][Math.floor((newx - deviation) / block)] !== 0 ||

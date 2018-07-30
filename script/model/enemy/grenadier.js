@@ -11,7 +11,7 @@ class Grenadier extends Enemy {
         this.state = this.states[0];
     }
 
-    walk() {
+    walk(dt) {
         if (this.state === this.states[0]) {
             this.animationtime = Date.now();
             this.state = this.states[1];
@@ -33,6 +33,6 @@ class Grenadier extends Enemy {
             this.animationtime = Date.now();
         }
 
-        this.move();
+        this.move(dt);
     }
 }

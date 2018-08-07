@@ -5,6 +5,7 @@ class Joystick {
 
         this.radius = 170;
         this.active = false;
+        this.move = false; /*move or turn*/
 
         this.x = 0;
         this.y = 0;
@@ -14,11 +15,11 @@ class Joystick {
 
     render() {
         if (this.active) {
-            this.renderTurn();
+            this.renderMove();
         }
     }
 
-    renderTurn() {
+    renderMove() {
         let width = 10;
         let size = 60;
 

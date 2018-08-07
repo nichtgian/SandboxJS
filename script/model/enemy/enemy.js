@@ -83,11 +83,18 @@ class Enemy {
         const deviation = 10;
         const block = player.map.size;
 
-        if (!(player.map.grid[Math.floor((newy + deviation) / block)][Math.floor((newx + deviation) / block)] !== 0 ||
-                player.map.grid[Math.floor((newy - deviation) / block)][Math.floor((newx - deviation) / block)] !== 0 ||
-                player.map.grid[Math.floor((newy + deviation) / block)][Math.floor((newx - deviation) / block)] !== 0 ||
-                player.map.grid[Math.floor((newy - deviation) / block)][Math.floor((newx + deviation) / block)] !== 0 ||
-                player.map.grid[Math.floor(newy / block)][Math.floor(newx / block)] !== 0)) {
+        if (
+            !(
+            Math.floor(newx / block) < 0 ||
+            Math.floor(newy / block) < 0 ||
+            Math.floor(newx / block) > player.map.width ||
+            Math.floor(newy / block) > player.map.height ||
+            player.map.grid[Math.floor((newy + deviation) / block)][Math.floor((newx + deviation) / block)] !== 0 ||
+            player.map.grid[Math.floor((newy - deviation) / block)][Math.floor((newx - deviation) / block)] !== 0 ||
+            player.map.grid[Math.floor((newy + deviation) / block)][Math.floor((newx - deviation) / block)] !== 0 ||
+            player.map.grid[Math.floor((newy - deviation) / block)][Math.floor((newx + deviation) / block)] !== 0 ||
+            player.map.grid[Math.floor(newy / block)][Math.floor(newx / block)] !== 0
+            )) {
             this.x = newx;
             this.y = newy;
         }

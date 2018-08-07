@@ -4,6 +4,7 @@ function checktouch() {
         document.addEventListener("touchstart", touchstart, false);
         document.addEventListener("touchmove", touchmove, false);
         document.addEventListener("touchend", touchend, false);
+        document.addEventListener("touchcancel", touchend, false);
     }
     else {
         document.addEventListener('pointerlockchange', lockChangeLog, false);

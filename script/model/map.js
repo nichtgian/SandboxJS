@@ -73,7 +73,7 @@ class Map {
 
         this.enemys = [
             new Grenadier(495, 325, 40),
-            new Soldier(725, 525, 0),
+            new Soldier(725, 575, 180),
             new Grenadier(325, 725, 270)
         ];
     }

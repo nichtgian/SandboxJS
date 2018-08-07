@@ -39,6 +39,13 @@ document.onkeydown = (event) => {
         case 69:
             player.turnSpeed = turn;
             break;
+
+        /*space*/
+        case 32:
+            if (player.jump <= 0) {
+                player.jumpSpeed = 4.5;
+            }
+            break;
     }
 };
 

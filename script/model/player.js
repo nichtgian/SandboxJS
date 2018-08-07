@@ -7,10 +7,12 @@ class Player {
         this.resolution = 1;
         this.fov = 90 * (Math.PI / 180);
         this.size = 15;
-        this.look = 0;
 
+        this.jump = 0;
+        this.jumpSpeed = 0;
         this.speed = 0;
         this.turnSpeed = 0;
+        this.look = 0;
         this.lookSpeed = 0;
         this.moveDirection = 0;
 
@@ -40,8 +42,6 @@ class Player {
     }
 
     move(dt) {
-        this.turn(this.turnSpeed, this.lookSpeed);
-
         if (this.speed === 0) {
             return;
         }
@@ -63,8 +63,19 @@ class Player {
         }
     }
 
+    jumpMove(dt) {
+        this.jumpSpeed -= 0.25;
+        this.jump += this.jumpSpeed;
+        if (this.jump < 0) {
+            this.jump = 0;
+        }
+    }
+
     update(dt) {
+        this.turn(this.turnSpeed, this.lookSpeed);
         this.move(dt);
+        this.jumpMove(dt);
+
         this.map.enemys[0].walk(dt);
         this.map.enemys[2].walk(dt);
     }
@@ -201,17 +212,22 @@ class Player {
         let size = 1200 / wall.distance;
         let texture = this.texture.walls[wall.texture -1].image;
         let textureX = Math.floor(texture.width / 50 * wall.textureX);
+        let jump = this.jump * 10 / wall.distance;
+        let y = canvas.height / 2 - size / 2 + this.look + jump;
 
         ctx.drawImage(
             texture, textureX, 0, 1, texture.height,
-            x, canvas.height / 2 - size / 2 + this.look, 1, size
+            x, y, 1, size
         );
 
         if (wall.shadow) {
+            ctx.fillStyle = this.texture.colors.shadow;
             ctx.globalAlpha = 0.4;
-            ctx.fillRect(x, canvas.height / 2 - size / 2 + this.look, 1, size);
+            ctx.fillRect(x, y, 1, size);
             ctx.globalAlpha = 1;
         }
+
+        this.renderGround(x, y + size);
     }
 
     renderEnemys() {
@@ -294,7 +310,6 @@ class Player {
             let sprite = sprites[i];
             let x = Math.tan(sprite.angle) * sprite.viewDist;
             let left = canvas.width / 2 + x - sprite.size / 2;
-
             this.renderSprite(sprite.image, sprite.distance, left, sprite.size);
         }
     }
@@ -303,11 +318,11 @@ class Player {
         if (image === null) {
             return;
         }
-
-        let resolution = 2;
+        let resolution = 1;
         for (let i = 0; i < image.width * resolution; i++) {
             let pixel = size / image.width;
             let x = pixel * i;
+            let jump = this.jump * 10 / distance;
 
             if (this.zIndex[Math.round(left + x / resolution)] < distance) {
                 continue;
@@ -316,7 +331,7 @@ class Player {
             ctx.drawImage(
                 image,
                 i / resolution, 0, 1 / resolution, image.height,
-                left + x / resolution, (canvas.height - size) / 2 + this.look, pixel, size
+                left + x / resolution, (canvas.height - size) / 2 + this.look + jump, pixel, size
             );
         }
 
@@ -340,20 +355,26 @@ class Player {
         */
     }
 
+    renderGround(x, y) {
+        ctx.fillStyle = this.texture.colors.ground;
+        ctx.fillRect(x, y , 1, canvas.height - y);
+    }
+
     renderSkybox() {
         let image = texture.skyboxes[0].image;
+        let jump = this.jump;
+
         ctx.drawImage(
             image,
             image.width / (6 * 60) * this.pod, 0, image.width / 6, image.height,
-            0, -image.height * 2 + this.look, canvas.width, image.height * 3.5
+            0, -image.height * 2 + this.look, canvas.width, (image.height + jump / 3.5) * 3.5
         );
+
         ctx.drawImage(
             image,
             image.width / (6 * 60) * (this.pod - 360), 0, image.width / 6, image.height,
-            0, -image.height * 2 + this.look, canvas.width, image.height * 3.5
+            0, -image.height * 2 + this.look, canvas.width, (image.height + jump / 3.5) * 3.5
         );
-        ctx.fillStyle = texture.colors.ground;
-        ctx.fillRect(0, canvas.height / 2 + this.look, canvas.width, canvas.height / 2 - this.look);
     }
 
     renderUI() {

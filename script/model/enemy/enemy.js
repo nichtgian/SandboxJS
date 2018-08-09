@@ -99,7 +99,7 @@ class Enemy {
             this.y = newy;
         }
         else {
-            this.turn(180);
+            this.turn(Math.random() * 360);
         }
     }
 

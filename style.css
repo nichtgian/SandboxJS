@@ -14,3 +14,22 @@ html, body {
     top: 50%;
     transform: translateY(-50%);
 }
+
+#left {
+    margin: auto;
+    width: 50%;
+    height: 100%;
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+}
+
+#right {
+    margin: auto;
+    margin-left: 50%;
+    width: 50%;
+    height: 100%;
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+}

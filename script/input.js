@@ -1,10 +1,7 @@
 function checktouch() {
     if ('ontouchstart' in document.documentElement) {
         player.joystick = new Joystick();
-        document.addEventListener("touchstart", touchstart, false);
-        document.addEventListener("touchmove", touchmove, false);
-        document.addEventListener("touchend", touchend, false);
-        document.addEventListener("touchcancel", touchend, false);
+        initializetouch();
     }
     else {
         document.addEventListener('pointerlockchange', lockChangeLog, false);
@@ -30,28 +27,67 @@ function mousemoveCallback(event) {
     player.turn(event.movementX / sensitivityX, (-event.movementY) * sensitivityY);
 }
 
-
 /*mobile*/
-function touchstart(event) {
+function initializetouch() {
+    document.getElementById("left").addEventListener("touchstart", touchstartMove, false);
+    document.getElementById("left").addEventListener("touchmove", touchmoveMove, false);
+    document.getElementById("left").addEventListener("touchend", touchendMove, false);
+    document.getElementById("left").addEventListener("touchcancel", touchendMove, false);
+
+    document.getElementById("right").addEventListener("touchstart", touchstartTurn, false);
+    document.getElementById("right").addEventListener("touchmove", touchmoveTurn, false);
+    document.getElementById("right").addEventListener("touchend", touchendTurn, false);
+    document.getElementById("right").addEventListener("touchcancel", touchendTurn, false);
+}
+
+function touchstartMove(event) {
     let joystick = player.joystick;
     let x = event.touches[0].pageX / canvas.clientWidth * canvas.width;
     let y = event.touches[0].pageY / window.innerHeight * canvas.height;
-    joystick.active = true;
-    joystick.x = x;
-    joystick.y = y;
-    joystick.stickX = x;
-    joystick.stickY = y;
+
+    joystick.moveActive = true;
+    joystick.moveX = x;
+    joystick.moveY = y;
+    joystick.moveSX = x;
+    joystick.moveSY = y;
 }
 
-function touchmove() {
-    player.joystick.moveStick(
+function touchmoveMove(event) {
+    player.joystick.input(
         event.touches[0].pageX / canvas.clientWidth * canvas.width,
-        event.touches[0].pageY / window.innerHeight * canvas.height
+        event.touches[0].pageY / window.innerHeight * canvas.height,
+        true
     );
 }
 
-function touchend() {
-    player.joystick.active = false;
+function touchendMove() {
+    player.joystick.moveActive = false;
     player.speed = 0;
+}
+
+function touchstartTurn(event) {
+    let joystick = player.joystick;
+    let x = event.touches[0].pageX / canvas.clientWidth * canvas.width;
+    let y = event.touches[0].pageY / window.innerHeight * canvas.height;
+
+    joystick.turnActive = true;
+    joystick.turnX = x;
+    joystick.turnY = y;
+    joystick.turnSX = x;
+    joystick.turnSY = y;
+}
+
+function touchmoveTurn(event) {
+    player.joystick.input(
+        event.touches[0].pageX / canvas.clientWidth * canvas.width,
+        event.touches[0].pageY / window.innerHeight * canvas.height,
+        false
+    );
+}
+
+function touchendTurn() {
+    player.joystick.turnActive = false;
+    player.lookSpeed = 0;
     player.turnSpeed = 0;
 }
+

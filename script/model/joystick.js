@@ -1,73 +1,126 @@
 class Joystick {
     constructor() {
-        this.direction = 0;
-        this.turnSpeed = 0;
+        this.moveActive = false;
+        this.turnActive = false;
 
         this.radius = 170;
-        this.active = false;
-        this.move = false; /*move or turn*/
 
-        this.x = 0;
-        this.y = 0;
-        this.stickX = 0;
-        this.stickY = 0;
+        this.moveX = 0;
+        this.moveY = 0;
+        this.moveSX = 0;
+        this.moveSY = 0;
+
+        this.turnX = 0;
+        this.turnY = 0;
+        this.turnSX = 0;
+        this.turnSY = 0;
     }
 
     render() {
-        if (this.active) {
-            this.renderMove();
+        if (this.moveActive) {
+            this.renderJoystick(true);
+        }
+        if (this.turnActive) {
+            this.renderJoystick(false);
         }
     }
 
-    renderMove() {
+    renderJoystick(moveJoystick) {
         let width = 10;
         let size = 60;
+        let pos = this.getPos(moveJoystick);
 
         /*inner*/
         ctx.beginPath();
         ctx.globalAlpha = 0.4;
         ctx.fillStyle = texture.colors.default;
-        ctx.arc(this.x, this.y, this.radius, 0, 2 * Math.PI);
+        ctx.arc(pos.x, pos.y, this.radius, 0, 2 * Math.PI);
         ctx.fill();
 
         /*border*/
         ctx.beginPath();
         ctx.globalAlpha = 0.8;
         ctx.lineWidth = width;
-        ctx.arc(this.x, this.y, this.radius + width / 2, 0, 2 * Math.PI);
+        ctx.arc(pos.x, pos.y, this.radius + width / 2, 0, 2 * Math.PI);
         ctx.stroke();
         ctx.lineWidth = 1;
 
         /*stick*/
         ctx.beginPath();
-        ctx.arc(this.stickX, this.stickY, size, 0, 2 * Math.PI);
+        ctx.arc(pos.sx, pos.sy, size, 0, 2 * Math.PI);
         ctx.fill();
 
         ctx.globalAlpha = 1;
     }
 
-    moveStick(x, y) {
-        let distance = Math.sqrt(Math.pow(this.x - x, 2) + Math.pow(this.y - y, 2));
+    input(x, y, moveJoystick) {
+        let pos = this.getPos(moveJoystick);
+        let distance = Math.sqrt(Math.pow(pos.x - x, 2) + Math.pow(pos.y - y, 2));
+
         if (distance <=  this.radius) {
-            this.stickX = x;
-            this.stickY = y;
+            pos.sx = x;
+            pos.sy = y;
         }
         else {
-            let angle = Math.atan2(x - this.x, y - this.y);
-            this.stickX = this.x + this.radius * Math.sin(angle);
-            this.stickY = this.y + this.radius * Math.cos(angle);
+            let angle = Math.atan2(x - pos.x, y - pos.y);
+            pos.sx = pos.x + this.radius * Math.sin(angle);
+            pos.sy = pos.y + this.radius * Math.cos(angle);
         }
 
-        player.moveDirection = 0;
-        let backSpeed = 0.75;
-        let speedY = (this.y - this.stickY) / 150;
-        if (speedY < 0) {
-            speedY = (speedY * backSpeed) * -1;
-            player.moveDirection = 180;
-        }
-        player.speed = speedY;
+        this.setPos(pos, moveJoystick);
 
-        let speedX = -(this.x - this.stickX) / 50;
-        player.turnSpeed = speedX;
+        if (moveJoystick) {
+            this.moveInput();
+        }
+        else {
+            this.turnInput();
+        }
+    }
+
+    moveInput() {
+        let direction = Math.atan2(this.moveSX - this.moveX, this.moveY - this.moveSY);
+        direction = direction / Math.PI * 180;
+        if (direction < 0) {
+            direction += 360;
+        }
+
+        player.moveDirection = direction;
+        player.speed = Math.sqrt(Math.pow(this.moveX - this.moveSX, 2) + Math.pow(this.moveY - this.moveSY, 2)) / 200;
+    }
+
+    turnInput() {
+        let lookSpeed = -(this.turnSY - this.turnY) / 5;
+        let turnSpeed = -(this.turnX - this.turnSX) / 50;
+        player.turnSpeed = turnSpeed;
+        player.lookSpeed = lookSpeed;
+    }
+
+    setPos(pos, moveJoystick) {
+        if (moveJoystick) {
+            this.moveSX = pos.sx;
+            this.moveSY = pos.sy;
+        }
+        else {
+            this.turnSX = pos.sx;
+            this.turnSY = pos.sy;
+        }
+    }
+
+    getPos(moveJoystick) {
+        let pos = {
+            x: this.moveX,
+            y: this.moveY,
+            sx: this.moveSX,
+            sy: this.moveSY
+        };
+
+        if (!moveJoystick) {
+            pos.x = this.turnX;
+            pos.y = this.turnY;
+            pos.sx = this.turnSX;
+            pos.sy = this.turnSY;
+        }
+
+        return pos;
     }
 }

@@ -1,8 +1,8 @@
-# Sandbox [![HitCount](http://hits.dwyl.io/Nichtgian/sandbox.svg)](http://hits.dwyl.io/Nichtgian/sandbox)
-The sandbox is a raycasting engine in 2nd generation.
-You can play the current Version [here](https://nichtgian.github.io/sandbox/).
+# Sandbox
+The sandbox is a raycasting engine project (pseude 3d engine).
+You can play the current Version [here](https://nichtgian.github.io/SandboxJS/).
 
-[<img src="assets/play.png">](https://nichtgian.github.io/sandbox/)
+[<img src="assets/play.png">](https://nichtgian.github.io/SandboxJS/)
 
 ## 0 Content
 * 1 Ambition
@@ -58,6 +58,4 @@ Possible Gamemodes:
 For online gameplay a main lobby serves as serverbrowser. You can meet up with people here and join
 public or create private servers. We'd like to implement a character or even weapon customisation. 
 
-> Project is still in early development!
-
-Licensed by NMFI - [Nichtgian Media Foundation Inc.](https://nichtgianmediafoundationincorporation.github.io/page/index.html) - high-end computer-software, better than google
+> Project is still in early development! -> New and improved projects available.
